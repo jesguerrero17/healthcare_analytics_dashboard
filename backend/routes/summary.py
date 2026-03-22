@@ -5,7 +5,7 @@ import os
 summary_bp = Blueprint("summary", __name__)
 
 # Load dataset once (optional optimization)
-DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "insurance.csv")
+DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "data", "insurance.csv")
 df = pd.read_csv(DATA_PATH)
 
 
