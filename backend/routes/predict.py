@@ -28,20 +28,7 @@ def predict_cost():
     predicted_charges = model.predict(model_input)[0]
     predicted_charges = float(predicted_charges)
 
-    # Save to database
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT INTO predictions (age, sex, bmi, children, smoker, region, predicted_charges)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-    """, (age, sex, bmi, children, smoker, region, predicted_charges))
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
+    # Return prediction only (no DB)
     return jsonify({
-        "predicted_charges": round(float(predicted_charges), 2)
+        "predicted_charges": round(predicted_charges, 2)
     })
-
