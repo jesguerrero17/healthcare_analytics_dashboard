@@ -2,7 +2,7 @@ from flask import Flask
 import joblib
 
 
-model = joblib.load("models/cost_model.pkl")
+model = joblib.load(os.path.join(os.path.dirname(__file__), "models/cost_model.pkl"))
 
 from flask_cors import CORS
 
