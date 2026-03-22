@@ -1,5 +1,4 @@
 from flask import Blueprint, request, jsonify, current_app
-from db.connection import get_connection
 import pandas as pd
 
 predict_bp = Blueprint("predict", __name__)
