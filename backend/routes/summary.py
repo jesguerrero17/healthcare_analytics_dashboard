@@ -1,7 +1,17 @@
 from flask import Blueprint, jsonify, current_app
+import pandas as pd
+import os
 
 summary_bp = Blueprint("summary", __name__)
 
+# Load dataset once (optional optimization)
+DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "insurance.csv")
+df = pd.read_csv(DATA_PATH)
+
+
+# -----------------------------
+# FEATURE IMPORTANCE
+# -----------------------------
 @summary_bp.route("/feature-importance", methods=["GET"])
 def feature_importance():
     model = current_app.config["MODEL"]
@@ -12,13 +22,11 @@ def feature_importance():
     feature_names = preprocessor.get_feature_names_out()
     importances = rf.feature_importances_
 
-    # Build list of dicts
     importance_list = [
         {"feature": feature_names[i], "importance": float(importances[i])}
         for i in range(len(importances))
     ]
 
-    # Sort by importance descending
     importance_list = sorted(
         importance_list,
         key=lambda x: x["importance"],
@@ -27,123 +35,63 @@ def feature_importance():
 
     return jsonify(importance_list)
 
-from db.connection import get_connection
 
+# -----------------------------
+# REGION STATS (CSV-based)
+# -----------------------------
 @summary_bp.route("/region-stats", methods=["GET"])
 def region_stats():
-    conn = get_connection()
-    cur = conn.cursor()
+    region_groups = df.groupby("region")["charges"].mean().reset_index()
 
-    cur.execute("""
-        SELECT region, AVG(predicted_charges)
-        FROM predictions
-        GROUP BY region
-        ORDER BY region;
-    """)
-
-    rows = cur.fetchall()
-
-    cur.close()
-    conn.close()
-
-    # Convert to list of dicts
     results = [
-        {"region": row[0], "avg_predicted_charges": float(row[1])}
-        for row in rows
+        {"region": row["region"], "avg_predicted_charges": float(row["charges"])}
+        for _, row in region_groups.iterrows()
     ]
 
     return jsonify(results)
 
+
+# -----------------------------
+# USAGE STATS (No DB → Static or Remove)
+# -----------------------------
 @summary_bp.route("/usage", methods=["GET"])
 def usage_stats():
-    conn = get_connection()
-    cur = conn.cursor()
-
-    # Count predictions
-    cur.execute("SELECT COUNT(*) FROM predictions;")
-    total_predictions = cur.fetchone()[0]
-
-    # Count risk assessments
-    cur.execute("SELECT COUNT(*) FROM risk_assessments;")
-    total_risk_assessments = cur.fetchone()[0]
-
-    # Last prediction timestamp
-    cur.execute("SELECT MAX(timestamp) FROM predictions;")
-    last_prediction = cur.fetchone()[0]
-
-    # Last risk assessment timestamp
-    cur.execute("SELECT MAX(timestamp) FROM risk_assessments;")
-    last_risk_assessment = cur.fetchone()[0]
-
-    cur.close()
-    conn.close()
-
+    # Since no DB exists, return placeholder values
     return jsonify({
-        "total_predictions": total_predictions,
-        "total_risk_assessments": total_risk_assessments,
-        "last_prediction": str(last_prediction) if last_prediction else None,
-        "last_risk_assessment": str(last_risk_assessment) if last_risk_assessment else None
+        "total_predictions": None,
+        "total_risk_assessments": None,
+        "last_prediction": None,
+        "last_risk_assessment": None
     })
 
+
+# -----------------------------
+# PATIENT STATS (CSV-based)
+# -----------------------------
 @summary_bp.route("/patient-stats", methods=["GET"])
 def patient_stats():
-    conn = get_connection()
-    cur = conn.cursor()
+    age_min = int(df["age"].min())
+    age_max = int(df["age"].max())
+    age_avg = float(df["age"].mean())
 
-    # Age distribution (min, max, avg)
-    cur.execute("""
-        SELECT MIN(age), MAX(age), AVG(age)
-        FROM patients;
-    """)
-    age_min, age_max, age_avg = cur.fetchone()
+    bmi_min = float(df["bmi"].min())
+    bmi_max = float(df["bmi"].max())
+    bmi_avg = float(df["bmi"].mean())
 
-    # BMI distribution (min, max, avg)
-    cur.execute("""
-        SELECT MIN(bmi), MAX(bmi), AVG(bmi)
-        FROM patients;
-    """)
-    bmi_min, bmi_max, bmi_avg = cur.fetchone()
-
-    # Smoker breakdown
-    cur.execute("""
-        SELECT smoker, COUNT(*)
-        FROM patients
-        GROUP BY smoker;
-    """)
-    smoker_rows = cur.fetchall()
-    smoker_stats = {str(row[0]): row[1] for row in smoker_rows}
-
-    # Sex distribution
-    cur.execute("""
-        SELECT sex, COUNT(*)
-        FROM patients
-        GROUP BY sex;
-    """)
-    sex_rows = cur.fetchall()
-    sex_stats = {row[0]: row[1] for row in sex_rows}
-
-    # Region distribution
-    cur.execute("""
-        SELECT region, COUNT(*)
-        FROM patients
-        GROUP BY region;
-    """)
-    region_rows = cur.fetchall()
-    region_stats = {row[0]: row[1] for row in region_rows}
-
-    cur.close()
-    conn.close()
+    smoker_stats = df["smoker"].value_counts().to_dict()
+    sex_stats = df["sex"].value_counts().to_dict()
+    region_stats = df["region"].value_counts().to_dict()
 
     return jsonify({
         "age": {
             "min": age_min,
             "max": age_max,
-            "avg": float(age_avg) if age_avg else None
+            "avg": age_avg
         },
         "bmi": {
             "min": bmi_min,
             "max": bmi_max,
-            "avg": float(bmi_avg) if bmi_avg else None
+            "avg": bmi_avg
         },
         "smoker_breakdown": smoker_stats,
         "sex_distribution": sex_stats,
