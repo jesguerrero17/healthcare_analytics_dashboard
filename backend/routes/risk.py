@@ -1,5 +1,4 @@
 from flask import Blueprint, request, jsonify
-from db.connection import get_connection
 from models.risk_scoring import compute_risk_score, risk_level
 
 risk_bp = Blueprint("risk", __name__)
@@ -15,18 +14,7 @@ def risk_score():
     score = compute_risk_score(age, bmi, smoker)
     level = risk_level(score)
 
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT INTO risk_assessments (age, bmi, smoker, risk_score, risk_level)
-        VALUES (%s, %s, %s, %s, %s)
-    """, (age, bmi, smoker, score, level))
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
+    # No database saving — return only the result
     return jsonify({
         "risk_score": score,
         "risk_level": level
