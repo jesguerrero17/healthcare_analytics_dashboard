@@ -1,8 +1,6 @@
 from flask import Flask
-from dotenv import load_dotenv
 import joblib
 
-load_dotenv()
 
 model = joblib.load("models/cost_model.pkl")
 
