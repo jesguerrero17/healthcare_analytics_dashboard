@@ -8,7 +8,7 @@ model_path = os.path.join(os.path.dirname(__file__), "models", "cost_model.pkl")
 model = joblib.load(model_path)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 app.config["MODEL"] = model
 
