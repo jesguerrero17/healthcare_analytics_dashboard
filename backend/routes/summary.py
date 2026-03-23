@@ -82,6 +82,8 @@ def patient_stats():
     sex_stats = df["sex"].value_counts().to_dict()
     region_stats = df["region"].value_counts().to_dict()
 
+    print(df["smoker"].unique())
+
     return jsonify({
         "age": {
             "min": age_min,
