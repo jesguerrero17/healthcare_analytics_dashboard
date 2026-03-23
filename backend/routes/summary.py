@@ -78,7 +78,11 @@ def patient_stats():
     bmi_max = float(df["bmi"].max())
     bmi_avg = float(df["bmi"].mean())
 
-    df["smoker"] = df["smoker"].astype(str).str.lower().str.strip()
+    df["smoker"] = df["smoker"].astype(str).str.lower().str.strip()    
+    df["smoker"] = df["smoker"].map({
+        "yes": "true",
+        "no": "false"
+    })
     smoker_stats = df["smoker"].value_counts().to_dict()
     sex_stats = df["sex"].value_counts().to_dict()
     region_stats = df["region"].value_counts().to_dict()
