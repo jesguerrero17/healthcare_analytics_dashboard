@@ -18,6 +18,12 @@ This platform provides:
 - Feature Impact visualization
 - Average charges by region
 
+![Patient Demographics screenshot](/healthcare-dashboard/assets/demographics.png)
+
+![Feature Importance screenshot](/healthcare-dashboard/assets/feature_importance.png)
+
+![Regional Costs screenshot](/healthcare-dashboard/assets/regional_costs.png)
+
 ### Machine Learning Predictions
 
 Predicts medical insurance charges based on:
@@ -28,6 +34,8 @@ Predicts medical insurance charges based on:
 - Smoker status
 - Number of children
 - Region
+
+![Patient Predicted Costs screenshot](/healthcare-dashboard/assets/predictor.png)
 
 ### Full‑Stack Architecture
 
@@ -43,51 +51,51 @@ Predicts medical insurance charges based on:
 healthcare_analytics_dashboard/
 │
 ├── backend/
-│   ├── app.py
-│   ├── model.pkl
-│   ├── requirements.txt
-│   │
-│   ├── routes/
-│   │   ├── predict.py
-│   │   ├── risk.py
-│   │   └── summary.py
-│   │
-│   ├── models/
-│   │   └── risk_scoring.py
-│   │
-│   ├── utils/
-│   │   ├── preprocess.py
-│   │   └── load_model.py
-│   │
-│   └── data/
-│       └── insurance.csv
+│ ├── app.py
+│ ├── model.pkl
+│ ├── requirements.txt
+│ │
+│ ├── routes/
+│ │ ├── predict.py
+│ │ ├── risk.py
+│ │ └── summary.py
+│ │
+│ ├── models/
+│ │ └── risk_scoring.py
+│ │
+│ ├── utils/
+│ │ ├── preprocess.py
+│ │ └── load_model.py
+│ │
+│ └── data/
+│ └── insurance.csv
 │
-├── healthcare-dashboard/   (frontend)
-│   ├── index.html
-│   ├── package.json
-│   ├── vite.config.js
-│   │
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   ├── index.css
-│   │
-│   │   ├── layouts/
-│   │   │   └── SidebarLayout.jsx
-│   │
-│   │   ├── pages/
-│   │   │   ├── Dashboard.jsx
-│   │   │   └── PredictionForm.jsx
-│   │
-│   │   ├── components/
-│   │   │   ├── ChartHeader.jsx
-│   │   │   ├── PatientStats.jsx
-│   │   │   ├── FeatureImportanceChart.jsx
-│   │   │   └── RegionStatsChart.jsx
-│   │
-│   │   └── assets/
-│   │
-│   └── public/  
+├── healthcare-dashboard/ (frontend)
+│ ├── index.html
+│ ├── package.json
+│ ├── vite.config.js
+│ │
+│ ├── src/
+│ │ ├── App.jsx
+│ │ ├── main.jsx
+│ │ ├── index.css
+│ │
+│ │ ├── layouts/
+│ │ │ └── SidebarLayout.jsx
+│ │
+│ │ ├── pages/
+│ │ │ ├── Dashboard.jsx
+│ │ │ └── PredictionForm.jsx
+│ │
+│ │ ├── components/
+│ │ │ ├── ChartHeader.jsx
+│ │ │ ├── PatientStats.jsx
+│ │ │ ├── FeatureImportanceChart.jsx
+│ │ │ └── RegionStatsChart.jsx
+│ │
+│ │ └── assets/
+│ │
+│ └── public/  
 │
 └── README.md
 
