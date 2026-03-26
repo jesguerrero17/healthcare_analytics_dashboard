@@ -2,6 +2,10 @@
 
 A full‑stack healthcare analytics dashboard built with **Flask**, **React (Vite)**, and **Recharts**, designed to explore patient demographics, visualize medical charge patterns, and generate cost predictions using a trained machine learning model.
 
+## Live Demo
+
+https://healthcare-analytics-dashboard-one.vercel.app/
+
 ## This project demonstrates end‑to‑end data engineering, model deployment, API design, and a frontend dashboard development.
 
 ## Project Overview
@@ -36,41 +40,54 @@ Predicts medical insurance charges based on:
 
 ## Project Structure
 
-healthcare_analytics/
+healthcare_analytics_dashboard/
 │
 ├── backend/
-│ ├── app.py
-│ ├── model.pkl
-│ ├── requirements.txt
-│ ├── utils/
-│ │ ├── preprocess.py
-│ │ └── load_model.py
-│ ├── data/
-│ │ └── insurance.csv
-│ └── api/
-│ ├── predict.py
-│ ├── summary.py
-│ └── stats.py
+│   ├── app.py
+│   ├── model.pkl
+│   ├── requirements.txt
+│   │
+│   ├── routes/
+│   │   ├── predict.py
+│   │   ├── risk.py
+│   │   └── summary.py
+│   │
+│   ├── models/
+│   │   └── risk_scoring.py
+│   │
+│   ├── utils/
+│   │   ├── preprocess.py
+│   │   └── load_model.py
+│   │
+│   └── data/
+│       └── insurance.csv
 │
-├── frontend/
-│ ├── index.html
-│ ├── package.json
-│ ├── vite.config.js
-│ ├── src/
-│ │ ├── App.jsx
-│ │ ├── main.jsx
-│ │ ├── index.css
-│ │ ├── layouts/
-│ │ │ └── SidebarLayout.jsx
-│ │ ├── pages/
-│ │ │ ├── Dashboard.jsx
-│ │ │ └── PredictionForm.jsx
-│ │ ├── components/
-│ │ │ ├── ChartHeader.jsx
-│ │ │ ├── PatientStats.jsx
-│ │ │ ├── FeatureImportanceChart.jsx
-│ │ │ └── RegionStatsChart.jsx
-│ │ └── assets/
+├── healthcare-dashboard/   (frontend)
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   │
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   ├── index.css
+│   │
+│   │   ├── layouts/
+│   │   │   └── SidebarLayout.jsx
+│   │
+│   │   ├── pages/
+│   │   │   ├── Dashboard.jsx
+│   │   │   └── PredictionForm.jsx
+│   │
+│   │   ├── components/
+│   │   │   ├── ChartHeader.jsx
+│   │   │   ├── PatientStats.jsx
+│   │   │   ├── FeatureImportanceChart.jsx
+│   │   │   └── RegionStatsChart.jsx
+│   │
+│   │   └── assets/
+│   │
+│   └── public/  
 │
 └── README.md
 
